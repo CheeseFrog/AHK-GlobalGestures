@@ -1,6 +1,6 @@
 # AHK-Global-Gestures
 
-Global / Browser / Rocker / Wheel mouse gestures in AutoHotKey.
+Global (Windows / Browser / Rocker / Wheel) mouse gestures in AutoHotKey.
 
 ### Usage:
 
