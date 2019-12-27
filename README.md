@@ -1,4 +1,4 @@
-# AHK-Global-Gestures
+# AHK-GlobalGestures
 
 Global (Windows / Browser / Rocker / Wheel) mouse gestures in AutoHotKey.
 
