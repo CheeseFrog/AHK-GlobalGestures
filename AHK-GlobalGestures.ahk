@@ -1,4 +1,4 @@
-; AHK-Global-Gestures v1.05 - https://github.com/CheeseFrog/AHK-GlobalGestures
+; AHK-GlobalGestures v1.05 - https://github.com/CheeseFrog/AHK-GlobalGestures
 
 #NoEnv
 #SingleInstance Force
