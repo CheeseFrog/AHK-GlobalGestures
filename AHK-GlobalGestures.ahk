@@ -1,4 +1,4 @@
-; AHK-Global-Gestures v1.04 - https://github.com/CheeseFrog/AHK-Global-Gestures
+; AHK-Global-Gestures v1.05 - https://github.com/CheeseFrog/AHK-GlobalGestures
 
 #NoEnv
 #SingleInstance Force
@@ -108,7 +108,7 @@ If (noRclick) {
 MouseGetPos, x2, y2
 If !(browser(x1,y1,x2,y2))
 	Return
-If (abs(x2-x1)+abs(y2-y1)<20) { ; ignore mini-drag
+If (abs(x2-x1)+abs(y2-y1)<22) { ; ignore mini-drag
 	Click Right
 	Return
 	}
