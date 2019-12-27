@@ -1,4 +1,4 @@
-; AHK-Global-Gestures v1.02 - https://github.com/CheeseFrog/AHK-Global-Gestures
+; AHK-Global-Gestures v1.03 - https://github.com/CheeseFrog/AHK-Global-Gestures
 
 #NoEnv
 #SingleInstance Force
@@ -15,7 +15,7 @@ DllCall("SystemParametersInfo", UInt, 0x005D, UInt, n, Str, 0, UInt, 0)
 DllCall("SystemParametersInfo", UInt, 0x005E, UInt, 0, UIntP, nTrail, UInt, 0) ; get default trail
 
 
-UDLR(x1,y1,x2,y2) { ; gesture logic
+RLUD(x1,y1,x2,y2) { ; gesture logic
 DZ:=33 ; deadzone
 If (Abs(x2-x1)>Abs(y2-y1)) {
 	If ((x2-x1)>DZ)
@@ -34,7 +34,7 @@ browser(x1,y1,x2,y2) { ; gestures in chromium, firefox, IE
 if !(WinActive("ahk_class Chrome_WidgetWin_1") OR WinActive("ahk_class MozillaWindowClass") OR WinActive("ahk_class IEFrame"))
 	Return -1
 If ((Abs(x2-x1)>A_ScreenWidth*.62) OR (Abs(y2-y1)>A_ScreenHeight*.62)) ; long-drag
-	Switch UDLR(x1,y1,x2,y2) {
+	Switch RLUD(x1,y1,x2,y2) {
 		Case 1:
 			Send ^{PgDn} ; tab right
 		Case 2:
@@ -47,28 +47,25 @@ If ((Abs(x2-x1)>A_ScreenWidth*.62) OR (Abs(y2-y1)>A_ScreenHeight*.62)) ; long-dr
 			Return -1
 		}
 Else
-	Switch UDLR(x1,y1,x2,y2) {
+	Switch RLUD(x1,y1,x2,y2) {
 		Case 1:
 			Send {Alt down}{Right}{Alt up} ; forward page
 		Case 2:
 			Send {Alt down}{Left}{Alt up} ; back page
 		Case 3:
-			Send {PgUp 2}
+			Send {PgUp 2} ; scroll down
 		Case 4:
-			Send {PgDn 2}
+			Send {PgDn 2} ; scroll up
 		Default:
 			Return -1
 		}
 }
 
 
-~RButton & LButton::Return ; handle in RButton::
-
-
 RandL(x1,y1,t1) { ; global rocker gestures
 KeyWait, LButton, U
 MouseGetPos,x2,y2
-Switch UDLR(x1,y1,x2,y2) {
+Switch RLUD(x1,y1,x2,y2) {
 	Case 1:
 		Send {Ctrl down}#{Right}{Ctrl up} ; desktop right
 	Case 2:
@@ -116,6 +113,9 @@ Click, down, right
 MouseMove, %x2%, %y2%, 2
 Click, up, right
 Return
+
+
+~RButton & LButton::Return ; handle in RButton::
 
 
 ~Rbutton & WheelDown:: ; zoom on R-press
