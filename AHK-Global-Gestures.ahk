@@ -1,4 +1,4 @@
-; AHK-Global-Gestures v1.03 - https://github.com/CheeseFrog/AHK-Global-Gestures
+; AHK-Global-Gestures v1.04 - https://github.com/CheeseFrog/AHK-Global-Gestures
 
 #NoEnv
 #SingleInstance Force
@@ -108,6 +108,10 @@ If (noRclick) {
 MouseGetPos, x2, y2
 If !(browser(x1,y1,x2,y2))
 	Return
+If (abs(x2-x1)+abs(y2-y1)<20) { ; ignore mini-drag
+	Click Right
+	Return
+	}
 MouseMove,%x1%, %y1%, 0 ; preserve default right-click drag
 Click, down, right
 MouseMove, %x2%, %y2%, 2
