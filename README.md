@@ -10,4 +10,8 @@ Click the right mouse button to begin a gesture.
 - Drag and release in a browser for browser gestures (long-drag for extra gestures).
 - Use the middle button for zoom gestures.
 
-Simple programming with cardinal directions only. See code comments for gesture details.
+Simple programming (<3kb) with cardinal directions only.
+
+Includes a wicked mouse-trail as gesture-trail.
+
+See code comments for gesture details.
