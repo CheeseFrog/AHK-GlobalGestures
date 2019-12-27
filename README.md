@@ -1,10 +1,11 @@
 # AHK-Global-Gestures
 
-Right / Rocker / Wheel / Browser gestures in AutoHotKey.
+Global / Browser / Rocker / Wheel mouse gestures in AutoHotKey.
 
 ### Usage:
 
 Click the right mouse button to begin a gesture.
+
 - Click the left button to switch windows (long-click for alt-tab menu).
 - Drag and click the left button for windows gestures.
 - Drag and release in a browser for browser gestures (long-drag for extra gestures).
@@ -12,6 +13,6 @@ Click the right mouse button to begin a gesture.
 
 Simple programming (<3kb) with cardinal directions only.
 
-Includes a wicked mouse-trail as gesture-trail.
+Includes a gnarly mouse-trail as gesture-trail.
 
 See code comments for gesture details.
