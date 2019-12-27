@@ -1,4 +1,4 @@
-; AHK-Global-Gestures v1.0 - https://github.com/CheeseFrog/AHK-Global-Gestures
+; AHK-Global-Gestures v1.01 - https://github.com/CheeseFrog/AHK-Global-Gestures
 
 #NoEnv
 #SingleInstance Force
@@ -36,54 +36,54 @@ if !(WinActive("ahk_class Chrome_WidgetWin_1") OR WinActive("ahk_class MozillaWi
 bigx:=(Abs(x2-x1)>A_ScreenWidth*.62)
 bigy:=(Abs(y2-y1)>A_ScreenHeight*.62)
 Switch UDLR(x1,y1,x2,y2) {
-Case 1:
-	If (bigx)
-		Send ^{PgDn} ; tab right
-	Else
-		Send {Alt down}{Right}{Alt up} ; forward page
-Case 2:
-	If (bigx)
-		Send ^{PgUp} ; tab left
-	Else
-		Send {Alt down}{Left}{Alt up} ; back page
-Case 3:
-	If (bigy)
-		Send {Home} ; ^{Up} ; scroll home
-	Else
-		Send {PgUp 2}
-Case 4:
-	If (bigy)
-		Send {End} ; ^{Down} ; stroll end
-	Else
-		Send {PgDn 2}
-Default:
-	Return -1
-}
+	Case 1:
+		If (bigx)
+			Send ^{PgDn} ; tab right
+		Else
+			Send {Alt down}{Right}{Alt up} ; forward page
+	Case 2:
+		If (bigx)
+			Send ^{PgUp} ; tab left
+		Else
+			Send {Alt down}{Left}{Alt up} ; back page
+	Case 3:
+		If (bigy)
+			Send {Home} ; ^{Up} ; scroll home
+		Else
+			Send {PgUp 2}
+	Case 4:
+		If (bigy)
+			Send {End} ; ^{Down} ; stroll end
+		Else
+			Send {PgDn 2}
+	Default:
+		Return -1
+	}
 }
 
 
-~RButton & LButton::Return ; handle in RButton
+~RButton & LButton::Return ; handle in RButton::
 
 
 RandL(x1,y1,t1) { ; global rocker gestures
 KeyWait, LButton, U
 MouseGetPos,x2,y2
 Switch UDLR(x1,y1,x2,y2) {
-Case 1:
-	Send {Ctrl down}#{Right}{Ctrl up} ; desktop right
-Case 2:
-	Send {Ctrl down}#{Left}{Ctrl up} ; desktop left
-Case 3:
-	Send #{tab} ; Win Tab Menu
-Case 4:
-	Send #d ; Show desktop
-Default:
-	t2:=A_TickCount
-	if ((t2-t1) < 300)
-		Send {Alt down}{tab}{Alt up} ; alt-tab
-	Else
-		Send {Ctrl down}{Alt down}{tab}{Alt up}{Ctrl up} ; alt-tab menu
-}
+	Case 1:
+		Send {Ctrl down}#{Right}{Ctrl up} ; desktop right
+	Case 2:
+		Send {Ctrl down}#{Left}{Ctrl up} ; desktop left
+	Case 3:
+		Send #{tab} ; win-tab Menu
+	Case 4:
+		Send #d ; show desktop
+	Default:
+		t2:=A_TickCount
+		if ((t2-t1) < 300)
+			Send {Alt down}{tab}{Alt up} ; alt-tab
+		Else
+			Send {Ctrl down}{Alt down}{tab}{Alt up}{Ctrl up} ; alt-tab menu
+	}
 }
 
 
@@ -102,7 +102,7 @@ if !GetKeyState("LButton", "P")
 			Sleep 20
 			trail(nTrail)
 			Return
-		}
+			}
 trail(nTrail)
 If (noRclick) {
 	noRclick:=0
@@ -115,7 +115,6 @@ MouseMove,%x1%, %y1%, 0 ; preserve default right-click drag
 Click, down, right
 MouseMove, %x2%, %y2%, 2
 Click, up, right
-
 Return
 
 
@@ -125,7 +124,7 @@ If GetKeyState("RButton", "P") {
 	Send {Ctrl down}{WheelDown}
 	sleep 10
 	Send {Ctrl up}
-}
+	}
 Return
 
 
@@ -135,11 +134,11 @@ If GetKeyState("RButton", "P") {
 	Send {Ctrl down}{WheelUp}
 	sleep 10
 	Send {Ctrl up}
-}
+	}
 Return
 
 
 ~Rbutton & MButton:: ; zoom reset
-	noRclick:=1 
-	Send {Ctrl down}{0}{Ctrl up}
+noRclick:=1 
+Send {Ctrl down}{0}{Ctrl up}
 Return
