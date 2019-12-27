@@ -1,4 +1,4 @@
-; AHK-Global-Gestures v1.01 - https://github.com/CheeseFrog/AHK-Global-Gestures
+; AHK-Global-Gestures v1.02 - https://github.com/CheeseFrog/AHK-Global-Gestures
 
 #NoEnv
 #SingleInstance Force
@@ -33,32 +33,32 @@ If ((y2-y1)>DZ)
 browser(x1,y1,x2,y2) { ; gestures in chromium, firefox, IE
 if !(WinActive("ahk_class Chrome_WidgetWin_1") OR WinActive("ahk_class MozillaWindowClass") OR WinActive("ahk_class IEFrame"))
 	Return -1
-bigx:=(Abs(x2-x1)>A_ScreenWidth*.62)
-bigy:=(Abs(y2-y1)>A_ScreenHeight*.62)
-Switch UDLR(x1,y1,x2,y2) {
-	Case 1:
-		If (bigx)
+If ((Abs(x2-x1)>A_ScreenWidth*.62) OR (Abs(y2-y1)>A_ScreenHeight*.62)) ; long-drag
+	Switch UDLR(x1,y1,x2,y2) {
+		Case 1:
 			Send ^{PgDn} ; tab right
-		Else
-			Send {Alt down}{Right}{Alt up} ; forward page
-	Case 2:
-		If (bigx)
+		Case 2:
 			Send ^{PgUp} ; tab left
-		Else
-			Send {Alt down}{Left}{Alt up} ; back page
-	Case 3:
-		If (bigy)
+		Case 3:
 			Send {Home} ; ^{Up} ; scroll home
-		Else
-			Send {PgUp 2}
-	Case 4:
-		If (bigy)
+		Case 4:
 			Send {End} ; ^{Down} ; stroll end
-		Else
+		Default:
+			Return -1
+		}
+Else
+	Switch UDLR(x1,y1,x2,y2) {
+		Case 1:
+			Send {Alt down}{Right}{Alt up} ; forward page
+		Case 2:
+			Send {Alt down}{Left}{Alt up} ; back page
+		Case 3:
+			Send {PgUp 2}
+		Case 4:
 			Send {PgDn 2}
-	Default:
-		Return -1
-	}
+		Default:
+			Return -1
+		}
 }
 
 
