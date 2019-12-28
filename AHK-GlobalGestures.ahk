@@ -49,11 +49,11 @@ If ((Abs(x2-x1)>A_ScreenWidth*.575) OR (Abs(y2-y1)>A_ScreenHeight*.575)) ; long-
 Else
 	Switch RLUD(x1,y1,x2,y2) {
 		Case 1:
-			Send {Browser_Forward} ; forward page / {Alt down}{Right}{Alt up}
+			Send {Browser_Forward} ; {Alt down}{Right}{Alt up} ; forward page
 		Case 2:
 			Send {Browser_Back} ; back page
 		Case 3:
-			Send {PgUp} ; scroll down / {WheelUp 6}
+			Send {PgUp} ; {WheelUp 6} ; scroll down
 		Case 4:
 			Send {PgDn} ; scroll up
 		Default:
