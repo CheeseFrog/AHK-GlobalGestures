@@ -1,4 +1,4 @@
-; AHK-GlobalGestures v1.05 - https://github.com/CheeseFrog/AHK-GlobalGestures
+; AHK-GlobalGestures v1.06 - https://github.com/CheeseFrog/AHK-GlobalGestures
 
 #NoEnv
 #SingleInstance Force
@@ -33,7 +33,7 @@ If ((y2-y1)>DZ)
 browser(x1,y1,x2,y2) { ; gestures in chromium, firefox, IE
 if !(WinActive("ahk_class Chrome_WidgetWin_1") OR WinActive("ahk_class MozillaWindowClass") OR WinActive("ahk_class IEFrame"))
 	Return -1
-If ((Abs(x2-x1)>A_ScreenWidth*.62) OR (Abs(y2-y1)>A_ScreenHeight*.62)) ; long-drag
+If ((Abs(x2-x1)>A_ScreenWidth*.575) OR (Abs(y2-y1)>A_ScreenHeight*.575)) ; long-drag
 	Switch RLUD(x1,y1,x2,y2) {
 		Case 1:
 			Send ^{PgDn} ; tab right
@@ -49,13 +49,13 @@ If ((Abs(x2-x1)>A_ScreenWidth*.62) OR (Abs(y2-y1)>A_ScreenHeight*.62)) ; long-dr
 Else
 	Switch RLUD(x1,y1,x2,y2) {
 		Case 1:
-			Send {Alt down}{Right}{Alt up} ; forward page
+			Send {Browser_Forward} ; forward page / {Alt down}{Right}{Alt up}
 		Case 2:
-			Send {Alt down}{Left}{Alt up} ; back page
+			Send {Browser_Back} ; back page
 		Case 3:
-			Send {PgUp 2} ; scroll down
+			Send {PgUp} ; scroll down / {WheelUp 6}
 		Case 4:
-			Send {PgDn 2} ; scroll up
+			Send {PgDn} ; scroll up
 		Default:
 			Return -1
 		}
@@ -146,3 +146,10 @@ Return
 noRclick:=1 
 Send {Ctrl down}{0}{Ctrl up}
 Return
+
+
+; tip(x) {
+; tooltip, %x%
+; sleep 100
+; tooltip
+; }
