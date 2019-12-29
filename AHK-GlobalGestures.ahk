@@ -1,4 +1,4 @@
-; AHK-GlobalGestures v1.06 - https://github.com/CheeseFrog/AHK-GlobalGestures
+; AHK-GlobalGestures v1.07 - https://github.com/CheeseFrog/AHK-GlobalGestures
 
 #NoEnv
 #SingleInstance Force
@@ -14,6 +14,15 @@ DllCall("SystemParametersInfo", UInt, 0x005D, UInt, n, Str, 0, UInt, 0)
 }
 DllCall("SystemParametersInfo", UInt, 0x005E, UInt, 0, UIntP, nTrail, UInt, 0) ; get default trail
 
+
+noR() { ; prevent context menu
+global noRclick
+If (noRclick) {
+	noRclick:=0
+	trail(nTrail)
+	Return 1
+	}
+}
 
 RLUD(x1,y1,x2,y2) { ; gesture logic
 DZ:=33 ; deadzone
@@ -33,7 +42,7 @@ If ((y2-y1)>DZ)
 browser(x1,y1,x2,y2) { ; gestures in chromium, firefox, IE
 if !(WinActive("ahk_class Chrome_WidgetWin_1") OR WinActive("ahk_class MozillaWindowClass") OR WinActive("ahk_class IEFrame"))
 	Return -1
-If ((Abs(x2-x1)>A_ScreenWidth*.575) OR (Abs(y2-y1)>A_ScreenHeight*.575)) ; long-drag
+If ((Abs(x2-x1)>A_ScreenWidth*.55) OR (Abs(y2-y1)>A_ScreenHeight*.55)) ; long-drag gestures
 	Switch RLUD(x1,y1,x2,y2) {
 		Case 1:
 			Send ^{PgDn} ; tab right
@@ -64,6 +73,8 @@ Else
 
 RandL(x1,y1,t1) { ; global rocker gestures
 KeyWait, LButton, U
+If noR()
+	Exit
 MouseGetPos,x2,y2
 Switch RLUD(x1,y1,x2,y2) {
 	Case 1:
@@ -71,7 +82,7 @@ Switch RLUD(x1,y1,x2,y2) {
 	Case 2:
 		Send {Ctrl down}#{Left}{Ctrl up} ; desktop left
 	Case 3:
-		Send #{tab} ; win-tab Menu
+		Send #{tab} ; win-tab menu
 	Case 4:
 		Send #d ; show desktop
 	Default:
@@ -85,32 +96,28 @@ Switch RLUD(x1,y1,x2,y2) {
 
 
 RButton::
-If (noRclick) {
-	noRclick:=0
-	Return
-	}
+If noR()
+	Exit
 t1:=A_TickCount
 MouseGetPos,x1,y1
-trail(16)
+trail(16) ; trail length (max 16)
 if !GetKeyState("LButton", "P")
 	while GetKeyState("RButton", "P")
 		if GetKeyState("LButton", "P") {
 			RandL(x1,y1,t1)
 			Sleep 20
 			trail(nTrail)
-			Return
+			Exit
 			}
 trail(nTrail)
-If (noRclick) {
-	noRclick:=0
-	Return
-	}
+If noR()
+	Exit
 MouseGetPos, x2, y2
 If !(browser(x1,y1,x2,y2))
-	Return
+	Exit
 If (abs(x2-x1)+abs(y2-y1)<22) { ; ignore mini-drag
 	Click Right
-	Return
+	Exit
 	}
 MouseMove,%x1%, %y1%, 0 ; preserve default right-click drag
 Click, down, right
@@ -122,29 +129,36 @@ Return
 ~RButton & LButton::Return ; handle in RButton::
 
 
-~Rbutton & WheelDown:: ; zoom on R-press
-If GetKeyState("RButton", "P") {
-	noRclick:=1 
-	Send {Ctrl down}{WheelDown}
-	sleep 10
-	Send {Ctrl up}
-	}
-Return
-
-
-~Rbutton & WheelUp:: ; zoom on R-press
-If GetKeyState("RButton", "P") {
-	noRclick:=1
-	Send {Ctrl down}{WheelUp}
-	sleep 10
-	Send {Ctrl up}
-	}
-Return
-
-
-~Rbutton & MButton:: ; zoom reset
+~Rbutton & WheelDown::
 noRclick:=1 
-Send {Ctrl down}{0}{Ctrl up}
+If GetKeyState("LButton", "P") {
+	Send {Volume_Down} ; volume down
+	Exit
+	}
+Send {Ctrl down}{WheelDown} ; zoom out
+sleep 10
+Send {Ctrl up}
+Return
+
+
+~Rbutton & WheelUp::
+noRclick:=1
+If GetKeyState("LButton", "P") {
+	Send {Volume_Up} ; volume up
+	Exit
+	}
+Send {Ctrl down}{WheelUp} ; zoom in
+sleep 10
+Send {Ctrl up}
+Return
+
+
+~Rbutton & MButton::
+noRclick:=1 
+If GetKeyState("LButton", "P")
+	Send {Volume_Mute} ; volume mute
+Else
+	Send {Ctrl down}{0}{Ctrl up} ; zoom reset
 Return
 
 
