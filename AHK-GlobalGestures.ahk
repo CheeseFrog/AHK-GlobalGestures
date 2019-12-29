@@ -1,4 +1,4 @@
-; AHK-GlobalGestures v1.08 - https://github.com/CheeseFrog/AHK-GlobalGestures
+; AHK-GlobalGestures v1.09 - https://github.com/CheeseFrog/AHK-GlobalGestures
 
 #NoEnv
 #SingleInstance Force
@@ -72,7 +72,32 @@ Else
 }
 
 
-~RButton & LButton::Return ; handle in RButton
+
+RandM(x1,y1) {
+KeyWait, MButton, U
+noR()
+MouseGetPos,x2,y2
+Switch RLUD(x1,y1,x2,y2) {
+	Case 1:
+		Send {Media_Next} ; next track
+	Case 2:
+		Send {Media_Prev} ; previous track
+	Case 3:
+		Send {Media_Stop} ; stop
+	Case 4:
+		Send {Media_Play_Pause} ; pause / play
+	Default:
+		Send {Ctrl down}{0}{Ctrl up} ; zoom reset
+	}
+}
+
+
+~Rbutton & MButton::
+If GetKeyState("LButton", "P") {
+	noRclick:=1
+	Send {Volume_Mute} ; volume mute
+}
+Return
 
 
 RandL(x1,y1,t1) { ; global rocker gestures
@@ -100,31 +125,7 @@ Switch RLUD(x1,y1,x2,y2) {
 }
 
 
-~Rbutton & MButton::
-If GetKeyState("LButton", "P") {
-	noRclick:=1
-	Send {Volume_Mute} ; volume mute
-}
-Return
-
-
-RandM(x1,y1) {
-KeyWait, MButton, U
-noR()
-MouseGetPos,x2,y2
-Switch RLUD(x1,y1,x2,y2) {
-	Case 1:
-		Send {Media_Next} ; next track
-	Case 2:
-		Send {Media_Prev} ; previous track
-	Case 3:
-		Send {Media_Stop} ; stop
-	Case 4:
-		Send {Media_Play_Pause} ; pause / play
-	Default:
-		Send {Ctrl down}{0}{Ctrl up} ; zoom reset
-	}
-}
+~RButton & LButton::Return ; handle in RButton
 
 
 RButton::
@@ -158,25 +159,24 @@ Click, up, right
 Return
 
 
-~Rbutton & WheelDown::
+wheel(DU) {
+global noRclick
 noRclick:=1 
 If GetKeyState("LButton", "P") {
-	Send {Volume_Down} ; volume down
+	If (DU)
+		Send {Volume_Down} ; volume down
+	Else
+		Send {Volume_Up} ; volume up
 	Exit
 	}
-Send {Ctrl down}{WheelDown} ; zoom out
+If (DU)
+	Send {Ctrl down}{WheelDown} ; zoom out
+Else
+	Send {Ctrl down}{WheelUp} ; zoom in
 sleep 10
 Send {Ctrl up}
-Return
+}
 
 
-~Rbutton & WheelUp::
-noRclick:=1
-If GetKeyState("LButton", "P") {
-	Send {Volume_Up} ; volume up
-	Exit
-	}
-Send {Ctrl down}{WheelUp} ; zoom in
-sleep 10
-Send {Ctrl up}
-Return
+~Rbutton & WheelDown::wheel(1)
+~Rbutton & WheelUp::wheel(0)
