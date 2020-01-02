@@ -1,17 +1,16 @@
-; AHK-GlobalGestures v1.10 - https://github.com/CheeseFrog/AHK-GlobalGestures
+; AHK-GlobalGestures v1.11 - https://github.com/CheeseFrog/AHK-GlobalGestures
+
 
 #NoEnv
 #SingleInstance Force
 #MaxHotkeysPerInterval 200
-CoordMode, Mouse, Screen 
-; SetDefaultMouseSpeed, 0
-; SetMouseDelay, 1
+CoordMode, Mouse, Screen
+DllCall("SystemParametersInfo", UInt, 0x005E, UInt, 0, UIntP, noTrail, UInt, 0) ; get default trail
 
 
 trail(n) { ; trail as gesture line
 DllCall("SystemParametersInfo", UInt, 0x005D, UInt, n, Str, 0, UInt, 0)
 }
-DllCall("SystemParametersInfo", UInt, 0x005E, UInt, 0, UIntP, noTrail, UInt, 0) ; get default trail
 
 
 RLUD(x1,y1,x2,y2) { ; gesture logic
@@ -30,7 +29,8 @@ If ((y2-y1)>DZ)
 
 
 noR() { ; prevent context menu
-global noRclick
+global
+sleep 5 ; fixes R lockout bug on R+L+M
 trail(noTrail)
 If (noRclick) {
 	noRclick:=0
@@ -99,25 +99,6 @@ Switch RLUD(x1,y1,x2,y2) {
 ~RButton & LButton::Return ; handle in RButton
 
 
-RandM(x1,y1) {
-KeyWait, MButton, U
-noR()
-MouseGetPos,x2,y2
-Switch RLUD(x1,y1,x2,y2) {
-	Case 1:
-		Send {Media_Next} ; next track
-	Case 2:
-		Send {Media_Prev} ; previous track
-	Case 3:
-		Send {Media_Stop} ; stop
-	Case 4:
-		Send {Media_Play_Pause} ; pause / play
-	Default:
-		Send {Ctrl down}{0}{Ctrl up} ; zoom reset
-	}
-}
-
-
 checkclick() {
 global
 MouseGetPos,x1,y1
@@ -152,6 +133,26 @@ Click, down, right
 MouseMove, %x2%, %y2%, 2
 Click, up, right
 Return
+
+
+RandM(x1,y1) {
+MouseGetPos,x1,y1 ; debugs post-zoom media gesture
+KeyWait, MButton, U
+noR()
+MouseGetPos,x2,y2
+Switch RLUD(x1,y1,x2,y2) {
+	Case 1:
+		Send {Media_Next} ; next track
+	Case 2:
+		Send {Media_Prev} ; previous track
+	Case 3:
+		Send {Media_Stop} ; stop
+	Case 4:
+		Send {Media_Play_Pause} ; pause / play
+	Default:
+		Send {Ctrl down}{0}{Ctrl up} ; reset zoom
+	}
+}
 
 
 ~Rbutton & MButton::
