@@ -1,4 +1,4 @@
-; AHK-GlobalGestures v1.12 - https://github.com/CheeseFrog/AHK-GlobalGestures
+; AHK-GlobalGestures v1.13 - https://github.com/CheeseFrog/AHK-GlobalGestures
 
 
 #NoEnv
@@ -150,6 +150,9 @@ Switch RLUD(x1,y1,x2,y2) {
 		Send {Ctrl down}{0}{Ctrl up} ; reset zoom
 	}
 }
+
+
+~Rbutton & MButton::Return ; prevent M-click
 
 
 ~RButton & LButton::
