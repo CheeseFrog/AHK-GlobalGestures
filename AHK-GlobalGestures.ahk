@@ -1,4 +1,4 @@
-; AHK-GlobalGestures v1.11 - https://github.com/CheeseFrog/AHK-GlobalGestures
+; AHK-GlobalGestures v1.12 - https://github.com/CheeseFrog/AHK-GlobalGestures
 
 
 #NoEnv
@@ -96,9 +96,6 @@ Switch RLUD(x1,y1,x2,y2) {
 }
 
 
-~RButton & LButton::Return ; handle in RButton
-
-
 checkclick() {
 global
 MouseGetPos,x1,y1
@@ -155,10 +152,13 @@ Switch RLUD(x1,y1,x2,y2) {
 }
 
 
-~Rbutton & MButton::
-noRclick:=1
-If GetKeyState("LButton", "P")
-	Send {Volume_Mute} ; volume mute
+~RButton & LButton::
+while GetKeyState("RButton", "P")
+	If GetKeyState("MButton", "P") {
+		noRclick:=1
+		Send {Volume_Mute} ; volume mute
+		KeyWait, MButton, U
+		}
 Return
 
 
