@@ -8,12 +8,12 @@ Global (Windows / Browser / Rocker / Wheel) mouse gestures in [AutoHotKey](http:
 
 Click and hold the _right button_ to begin a gesture with these modifiers:
 
-- R+L: Click the _left button_ to switch windows (long-click for alt-tab menu).
-- R+L: Drag and click the _left button_ for Windows desktop gestures.
-- R: Drag in a browser for browser gestures (long-drag for additional).
-- R+M: Use the _middle button_ for global zoom gestures.
-- R+M: Drag and click the _middle button_ for multimedia control.
-- R+L+M: Click the _left button_ and use the _middle button_ for volume control.
+- __R__: _Drag_ in a browser for browser gestures (long-drag for additional).
+- __R+L__: _Click_ the _left button_ to switch windows (long-click for alt-tab menu).
+- __R+L__: _Drag_ and _click_ the _left button_ for Windows desktop gestures.
+- __R+M__: _Scroll/Click_ the _middle button_ for global zoom gestures.
+- __R+M__: _Drag_ and _click_ the _middle button_ for multimedia control.
+- __R+L+M__: _Click_ the _left button_ and _scroll/click_ the _middle button_ for volume control.
 
 ---
 
