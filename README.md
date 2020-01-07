@@ -6,7 +6,7 @@ Global (Windows / Browser / Rocker / Wheel) mouse gestures in [AutoHotKey](http:
 
 ### Usage:
 
-Click and hold the _right button_ to begin a gesture with these modifiers:
+_Click_ and hold the _right button_ to begin a gesture with these modifiers:
 
 - __R__: _Drag_ in a browser for browser gestures (long-drag for additional).
 - __R+L__: _Click_ the _left button_ to switch windows (long-click for alt-tab menu).
