@@ -1,4 +1,4 @@
-; AHK-GlobalGestures v1.13 - https://github.com/CheeseFrog/AHK-GlobalGestures
+; AHK-GlobalGestures v1.14 - https://github.com/CheeseFrog/AHK-GlobalGestures
 
 
 #NoEnv
@@ -156,7 +156,7 @@ Switch RLUD(x1,y1,x2,y2) {
 
 
 ~RButton & LButton::
-while GetKeyState("RButton", "P")
+while GetKeyState("RButton", "P") and GetKeyState("LButton", "P")
 	If GetKeyState("MButton", "P") {
 		noRclick:=1
 		Send {Volume_Mute} ; volume mute
