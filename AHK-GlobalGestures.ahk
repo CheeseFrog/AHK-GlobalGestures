@@ -74,8 +74,16 @@ Else
 
 
 RandL(x1, y1, t1) { ; global rocker gestures
+global
+while GetKeyState("RButton", "P") and GetKeyState("LButton", "P")
+	If GetKeyState("MButton", "P") {
+		noRclick:=1
+		Send {Volume_Mute} ; volume mute
+		KeyWait, MButton, U
+		}
 KeyWait, RButton, U
 KeyWait, LButton, U
+RL:=0
 If noR()
 	Exit
 MouseGetPos, x2, y2
@@ -152,18 +160,7 @@ Switch RLUD(x1, y1, x2, y2) {
 
 
 ~Rbutton & MButton::Return ; prevent M-click
-
-
-~RButton & LButton::
-RL:=1
-while GetKeyState("RButton", "P") and GetKeyState("LButton", "P")
-	If GetKeyState("MButton", "P") {
-		noRclick:=1
-		Send {Volume_Mute} ; volume mute
-		KeyWait, MButton, U
-		}
-RL:=0
-Return
+~RButton & LButton::RL:=1
 
 
 wheel(D) {
