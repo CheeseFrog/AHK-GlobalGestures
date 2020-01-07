@@ -1,4 +1,4 @@
-; AHK-GlobalGestures v1.15 - https://github.com/CheeseFrog/AHK-GlobalGestures
+; AHK-GlobalGestures v1.16 - https://github.com/CheeseFrog/AHK-GlobalGestures
 
 
 #NoEnv
@@ -13,7 +13,7 @@ DllCall("SystemParametersInfo", UInt, 0x005D, UInt, n, Str, 0, UInt, 0)
 }
 
 
-RLUD(x1,y1,x2,y2) { ; gesture logic
+RLUD(x1, y1, x2, y2) { ; gesture logic
 DZ:=33 ; deadzone
 If (Abs(x2-x1)>Abs(y2-y1)) {
 	If ((x2-x1)>DZ)
@@ -39,11 +39,13 @@ If (noRclick) {
 }
 
 
-browser(x1,y1,x2,y2) { ; gestures in chromium, firefox, IE
+browser() { ; gestures in chromium, firefox, IE
+global
+MouseGetPos, x2, y2
 If !(WinActive("ahk_class Chrome_WidgetWin_1") or WinActive("ahk_class MozillaWindowClass") or WinActive("ahk_class IEFrame"))
 	Return -1
 If ((Abs(x2-x1)>A_ScreenWidth*.55) or (Abs(y2-y1)>A_ScreenHeight*.55)) ; long-drag gestures
-	Switch RLUD(x1,y1,x2,y2) {
+	Switch RLUD(x1, y1, x2, y2) {
 		Case 1:
 			Send ^{PgDn} ; tab right
 		Case 2:
@@ -56,9 +58,9 @@ If ((Abs(x2-x1)>A_ScreenWidth*.55) or (Abs(y2-y1)>A_ScreenHeight*.55)) ; long-dr
 			Return -1
 		}
 Else
-	Switch RLUD(x1,y1,x2,y2) {
+	Switch RLUD(x1, y1, x2, y2) {
 		Case 1:
-			Send {Browser_Forward} ; {Alt down}{Right}{Alt up} ; forward page
+			Send {Browser_Forward} ; forward page
 		Case 2:
 			Send {Browser_Back} ; back page
 		Case 3:
@@ -71,13 +73,13 @@ Else
 }
 
 
-RandL(x1,y1,t1) { ; global rocker gestures
+RandL(x1, y1, t1) { ; global rocker gestures
 KeyWait, RButton, U
 KeyWait, LButton, U
 If noR()
 	Exit
-MouseGetPos,x2,y2
-Switch RLUD(x1,y1,x2,y2) {
+MouseGetPos, x2, y2
+Switch RLUD(x1, y1, x2, y2) {
 	Case 1:
 		Send {Ctrl down}#{Right}{Ctrl up} ; desktop right
 	Case 2:
@@ -98,16 +100,16 @@ Switch RLUD(x1,y1,x2,y2) {
 
 checkclick() {
 global
-MouseGetPos,x1,y1
+MouseGetPos, x1, y1
 If !GetKeyState("LButton", "P") and !GetKeyState("MButton", "P") ; anti-reverse rocker
 	while GetKeyState("RButton", "P")
 		If GetKeyState("MButton", "P") {
-			RandM(x1,y1)
+			RandM(x1, y1)
 			Return 1
 			}
 		Else
 		If GetKeyState("LButton", "P") {
-			RandL(x1,y1,t1)
+			RandL(x1, y1, t1)
 			Return 1
 			}
 }
@@ -116,28 +118,25 @@ If !GetKeyState("LButton", "P") and !GetKeyState("MButton", "P") ; anti-reverse 
 RButton::
 t1:=A_TickCount
 trail(16) ; trail length (max 16)
-If checkclick() or noR()
-	Return
-MouseGetPos, x2, y2
-If !(browser(x1,y1,x2,y2))
+If checkclick() or noR() or !browser()
 	Exit
 If (abs(x2-x1)+abs(y2-y1)<22) { ; ignore mini-drag
 	Click Right
 	Exit
 	}
-MouseMove,%x1%, %y1%, 0 ; preserve default right-click drag
+MouseMove, %x1%, %y1%, 0 ; preserve default right-click drag
 Click, down, right
 MouseMove, %x2%, %y2%, 2
 Click, up, right
 Return
 
 
-RandM(x1,y1) {
-MouseGetPos,x1,y1 ; debugs post-zoom media gesture
+RandM(x1, y1) {
+MouseGetPos, x1, y1 ; debugs post-zoom media gesture
 KeyWait, MButton, U
 noR()
-MouseGetPos,x2,y2
-Switch RLUD(x1,y1,x2,y2) {
+MouseGetPos, x2, y2
+Switch RLUD(x1, y1, x2, y2) {
 	Case 1:
 		Send {Media_Next} ; next track
 	Case 2:
