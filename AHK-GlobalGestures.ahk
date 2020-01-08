@@ -1,4 +1,4 @@
-; AHK-GlobalGestures v1.17 - https://github.com/CheeseFrog/AHK-GlobalGestures
+; AHK-GlobalGestures v1.18 - https://github.com/CheeseFrog/AHK-GlobalGestures
 
 
 #NoEnv
@@ -52,9 +52,9 @@ If ((Abs(x2-x1)>A_ScreenWidth*.55) or (Abs(y2-y1)>A_ScreenHeight*.55)) ; long-dr
 		Case 2:
 			Send ^{PgUp} ; tab left
 		Case 3:
-			Send {Home} ; ^{Up} ; scroll home
+			Send {Home} ; scroll home
 		Case 4:
-			Send {End} ; ^{Down} ; stroll end
+			Send {End} ; stroll end
 		Default:
 			Return -1
 		}
@@ -71,6 +71,54 @@ Else
 		Default:
 			Return -1
 		}
+}
+
+
+RandM(x1, y1) {
+global
+while GetKeyState("RButton", "P")
+	If GetKeyState("MButton", "P") and noRclick {
+		Send {Ctrl down}{0}{Ctrl up} ; reset zoom
+		KeyWait, MButton, U
+		}	
+KeyWait, MButton, U
+If noR()
+	Exit
+MouseGetPos, x2, y2
+Switch RLUD(x1, y1, x2, y2) {
+	Case 1:
+		Send {Media_Next} ; next track
+	Case 2:
+		Send {Media_Prev} ; previous track
+	Case 3:
+		Send {Media_Stop} ; stop
+	Case 4:
+		Send {Media_Play_Pause} ; pause / play
+	Default:
+		Send {Ctrl down}{0}{Ctrl up} ; reset zoom
+	}
+}
+
+
+wheel(D) {
+global
+If GetKeyState("LButton", "P") {
+	If RL {
+		noRclick:=1
+		If (D)
+			Send {Volume_Down} ; volume down
+		Else
+			Send {Volume_Up} ; volume up
+		}
+	Exit
+}
+noRclick:=1
+If (D)
+	Send {Ctrl down}{WheelDown} ; zoom out
+Else
+	Send {Ctrl down}{WheelUp} ; zoom in
+sleep 5
+Send {Ctrl up}
 }
 
 
@@ -138,51 +186,7 @@ Click, up, right
 Return
 
 
-RandM(x1, y1) {
-MouseGetPos, x1, y1 ; debugs post-zoom media gesture
-KeyWait, MButton, U
-noR()
-MouseGetPos, x2, y2
-Switch RLUD(x1, y1, x2, y2) {
-	Case 1:
-		Send {Media_Next} ; next track
-	Case 2:
-		Send {Media_Prev} ; previous track
-	Case 3:
-		Send {Media_Stop} ; stop
-	Case 4:
-		Send {Media_Play_Pause} ; pause / play
-	Default:
-		Send {Ctrl down}{0}{Ctrl up} ; reset zoom
-	}
-}
-
-
 ~Rbutton & MButton::Return ; prevent M-click
 ~RButton & LButton::RL:=1
-
-
-wheel(D) {
-global
-If GetKeyState("LButton", "P") {
-	If RL {
-		noRclick:=1
-		If (D)
-			Send {Volume_Down} ; volume down
-		Else
-			Send {Volume_Up} ; volume up
-		}
-	Exit
-}
-noRclick:=1
-If (D)
-	Send {Ctrl down}{WheelDown} ; zoom out
-Else
-	Send {Ctrl down}{WheelUp} ; zoom in
-sleep 5
-Send {Ctrl up}
-}
-
-
 ~Rbutton & WheelUp::wheel(0)
 ~Rbutton & WheelDown::wheel(1)
