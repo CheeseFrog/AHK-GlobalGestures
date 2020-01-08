@@ -1,4 +1,4 @@
-; AHK-GlobalGestures v1.18 - https://github.com/CheeseFrog/AHK-GlobalGestures
+; AHK-GlobalGestures v1.19 - https://github.com/CheeseFrog/AHK-GlobalGestures
 
 
 #NoEnv
@@ -52,9 +52,9 @@ If ((Abs(x2-x1)>A_ScreenWidth*.55) or (Abs(y2-y1)>A_ScreenHeight*.55)) ; long-dr
 		Case 2:
 			Send ^{PgUp} ; tab left
 		Case 3:
-			Send {Home} ; scroll home
+			Send ^{Home} ; scroll home
 		Case 4:
-			Send {End} ; stroll end
+			Send ^{End} ; stroll end
 		Default:
 			Return -1
 		}
