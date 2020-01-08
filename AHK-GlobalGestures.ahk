@@ -1,4 +1,4 @@
-; AHK-GlobalGestures v1.16 - https://github.com/CheeseFrog/AHK-GlobalGestures
+; AHK-GlobalGestures v1.17 - https://github.com/CheeseFrog/AHK-GlobalGestures
 
 
 #NoEnv
@@ -30,6 +30,7 @@ If ((y2-y1)>DZ)
 
 noR() { ; prevent context menu
 global
+RL:=0
 sleep 5 ; fixes R lockout bug on R+L+M
 trail(noTrail)
 If (noRclick) {
@@ -75,15 +76,13 @@ Else
 
 RandL(x1, y1, t1) { ; global rocker gestures
 global
-while GetKeyState("RButton", "P") and GetKeyState("LButton", "P")
-	If GetKeyState("MButton", "P") {
-		noRclick:=1
-		Send {Volume_Mute} ; volume mute
-		KeyWait, MButton, U
-		}
-KeyWait, RButton, U
-KeyWait, LButton, U
-RL:=0
+while GetKeyState("RButton", "P")
+	while GetKeyState("LButton", "P")
+		If GetKeyState("MButton", "P") {
+			noRclick:=1
+			Send {Volume_Mute} ; volume mute
+			KeyWait, MButton, U
+			}
 If noR()
 	Exit
 MouseGetPos, x2, y2
@@ -98,7 +97,7 @@ Switch RLUD(x1, y1, x2, y2) {
 		Send #d ; show desktop
 	Default:
 		t2:=A_TickCount
-		If ((t2-t1) < 300)
+		If ((t2-t1) < 500)
 			Send {Alt down}{tab}{Alt up} ; alt-tab
 		Else
 			Send {Ctrl down}{Alt down}{tab}{Alt up}{Ctrl up} ; alt-tab menu
@@ -165,21 +164,22 @@ Switch RLUD(x1, y1, x2, y2) {
 
 wheel(D) {
 global
-If RL {
-	noRclick:=1
-	If (D)
-		Send {Volume_Down} ; volume down
-	Else
-		Send {Volume_Up} ; volume up
-	}
-If GetKeyState("LButton", "P")
+If GetKeyState("LButton", "P") {
+	If RL {
+		noRclick:=1
+		If (D)
+			Send {Volume_Down} ; volume down
+		Else
+			Send {Volume_Up} ; volume up
+		}
 	Exit
+}
 noRclick:=1
 If (D)
 	Send {Ctrl down}{WheelDown} ; zoom out
 Else
 	Send {Ctrl down}{WheelUp} ; zoom in
-sleep 10
+sleep 5
 Send {Ctrl up}
 }
 
