@@ -13,7 +13,7 @@ _Click_ and hold the _right button_ to begin a gesture with these modifiers:
 - <kbd>R</kbd><kbd>L</kbd> : _Drag_ and _click_ the _left button_ for Windows 10 gestures (task view, virtual desktops).
 - <kbd>R</kbd><kbd>M</kbd> : _Scroll/Click_ the _middle button_ for global zoom gestures.
 - <kbd>R</kbd><kbd>M</kbd> : _Drag_ and _click_ the _middle button_ for multimedia control.
-- <kbd>R</kbd><kbd>M</kbd><kbd>L</kbd> : _Click_ the _left button_ and _scroll/click_ the _middle button_ for volume control.
+- <kbd>R</kbd><kbd>L</kbd><kbd>M</kbd> : _Click_ the _left button_ and _scroll/click_ the _middle button_ for volume control.
 
 ---
 
