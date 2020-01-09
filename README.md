@@ -17,8 +17,8 @@ _Click_ and hold the _right button_ to begin a gesture with these modifiers:
 
 ---
 
-Simple programming (<4kb) with cardinal directions only.
+Simple programming (<5kb) with cardinal directions only.
 
-Features a gnarly mouse-trail as gesture-trail.
+Features a gnarly mouse-trail and On-Screen Display.
 
 See code comments for gesture details.
