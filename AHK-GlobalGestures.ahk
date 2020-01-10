@@ -1,4 +1,4 @@
-; AHK-GlobalGestures v1.22 - https://github.com/CheeseFrog/AHK-GlobalGestures
+; AHK-GlobalGestures v1.23 - https://github.com/CheeseFrog/AHK-GlobalGestures
 
 
 #NoEnv
@@ -6,11 +6,28 @@
 #MaxHotkeysPerInterval 200
 CoordMode, Mouse, Screen
 DllCall("SystemParametersInfo", UInt, 0x005E, UInt, 0, UIntP, noTrail, UInt, 0) ; get default trail
-wOS:=DllCall("GetVersion")&0xFF 
-
+wOS:=DllCall("GetVersion")&0xFF ; Win Version
+Progress, B X50 Y60 ZH0 CWblack FM20 CTwhite,, % " ", OSD, Segoe UI Light ; OSD setup
+WinSet, Transparent, 0, OSD
+WinSet, ExStyle, +0x20, OSD
 
 trail(n) { ; trail as gesture line
 DllCall("SystemParametersInfo", UInt, 0x005D, UInt, n, Str, 0, UInt, 0)
+}
+
+
+OSD(msg) { ; On-Screen Display
+global
+SetTimer, OffSD, Delete
+Progress, 0,, %msg%, OSD
+WinSet, Transparent, % a:=230, OSD
+SetTimer, OffSD, 1100
+Return
+OffSD:
+	WinSet, Transparent, % a:=(a>1)*a*.6, OSD
+	If a
+		SetTimer, OffSD, 17
+	Return
 }
 
 
@@ -217,25 +234,3 @@ Return
 ~RButton & LButton::RL:=1
 ~Rbutton & WheelUp::wheel(0)
 ~Rbutton & WheelDown::wheel(1)
-
-
-OSD(msg) {
-global
-SetTimer, OffSD, Delete
-if (msg!=exmsg)
-	Progress, B X50 Y60 ZH0 CWblack FM20 CTwhite,, %msg%, OSD, Segoe UI Light
-a:=230
-exmsg:=msg
-WinSet, ExStyle, +0x20, OSD
-WinSet, Transparent, %a%, OSD
-SetTimer, OffSD, 1100
-Return
-OffSD:
-	a:=(a>1)*a*.6
-	WinSet, Transparent, %a%, OSD
-	If a
-		SetTimer, OffSD, 17
-	Else
-		exmsg:=""
-	Return
-}
