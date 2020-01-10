@@ -1,4 +1,4 @@
-; AHK-GlobalGestures v1.2 - https://github.com/CheeseFrog/AHK-GlobalGestures
+; AHK-GlobalGestures v1.21 - https://github.com/CheeseFrog/AHK-GlobalGestures
 
 
 #NoEnv
@@ -6,6 +6,7 @@
 #MaxHotkeysPerInterval 200
 CoordMode, Mouse, Screen
 DllCall("SystemParametersInfo", UInt, 0x005E, UInt, 0, UIntP, noTrail, UInt, 0) ; get default trail
+OS7:= % substr(a_osversion, 1, 2)<10
 
 
 trail(n) { ; trail as gesture line
@@ -119,6 +120,8 @@ global
 If GetKeyState("LButton", "P") {
 	If RL {
 		noRclick:=1
+		if OS7
+			OSD("Volume "+(D?Chr(0x2212):"+"))
 		If (D)
 			Send {Volume_Down} ; volume down
 		Else
@@ -157,7 +160,10 @@ Switch RLUD(x1, y1, x2, y2) {
 		Send {Ctrl down}#{Left}{Ctrl up}
 		OSD("Desktop Left")
 	Case 3:
-		Send #{tab}
+		if OS
+			Send {Ctrl down}#{tab}{Ctrl up}
+		Else
+			Send #{tab}
 		OSD("Task View")
 	Case 4:
 		Send #d
