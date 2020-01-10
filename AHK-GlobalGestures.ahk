@@ -1,4 +1,4 @@
-; AHK-GlobalGestures v1.21 - https://github.com/CheeseFrog/AHK-GlobalGestures
+; AHK-GlobalGestures v1.22 - https://github.com/CheeseFrog/AHK-GlobalGestures
 
 
 #NoEnv
@@ -6,7 +6,7 @@
 #MaxHotkeysPerInterval 200
 CoordMode, Mouse, Screen
 DllCall("SystemParametersInfo", UInt, 0x005E, UInt, 0, UIntP, noTrail, UInt, 0) ; get default trail
-OS7:= % substr(a_osversion, 1, 2)<10
+wOS:=DllCall("GetVersion")&0xFF 
 
 
 trail(n) { ; trail as gesture line
@@ -32,7 +32,7 @@ If ((y2-y1)>DZ)
 noR() { ; prevent context menu
 global
 RL:=0
-sleep 5 ; fixes R lockout bug on R+L+M
+;sleep 5 ; fixes R lockout bug on R+L+M
 trail(noTrail)
 If (noRclick) {
 	noRclick:=0
@@ -101,7 +101,7 @@ Switch RLUD(x1, y1, x2, y2) {
 		OSD("Media Next")
 	Case 2:
 		Send {Media_Prev}
-		OSD("Media Back")
+		OSD("Media Last")
 	Case 3:
 		Send {Media_Stop}
 		OSD("Media Stop")
@@ -120,17 +120,17 @@ global
 If GetKeyState("LButton", "P") {
 	If RL {
 		noRclick:=1
-		if OS7
-			OSD("Volume "+(D?Chr(0x2212):"+"))
 		If (D)
 			Send {Volume_Down} ; volume down
 		Else
 			Send {Volume_Up} ; volume up
+		if wOS<8
+			OSD("Volume "+(D?Chr(0x2212):"+"))
 		}
 	Exit
 }
 noRclick:=1
-OSD("Zoom")
+OSD("Zoom "+(D?Chr(0x2212):"+"))
 If (D)
 	Send {Ctrl down}{WheelDown} ; zoom out
 Else
@@ -147,6 +147,8 @@ while GetKeyState("RButton", "P")
 		If GetKeyState("MButton", "P") {
 			noRclick:=1
 			Send {Volume_Mute} ; volume mute
+			if wOS<8
+				OSD("Volume Mute")
 			KeyWait, MButton, U
 			}
 If noR()
@@ -160,7 +162,7 @@ Switch RLUD(x1, y1, x2, y2) {
 		Send {Ctrl down}#{Left}{Ctrl up}
 		OSD("Desktop Left")
 	Case 3:
-		if OS
+		if wOS<10
 			Send {Ctrl down}#{tab}{Ctrl up}
 		Else
 			Send #{tab}
