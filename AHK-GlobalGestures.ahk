@@ -1,4 +1,4 @@
-; AHK-GlobalGestures v1.23 - https://github.com/CheeseFrog/AHK-GlobalGestures
+; AHK-GlobalGestures v1.24 - https://github.com/CheeseFrog/AHK-GlobalGestures
 
 
 #NoEnv
@@ -7,7 +7,7 @@
 CoordMode, Mouse, Screen
 DllCall("SystemParametersInfo", UInt, 0x005E, UInt, 0, UIntP, noTrail, UInt, 0) ; get default trail
 wOS:=DllCall("GetVersion")&0xFF ; Win Version
-Progress, B X50 Y60 ZH0 CWblack FM20 CTwhite,, % " ", OSD, Segoe UI Light ; OSD setup
+Progress, B X50 Y60 ZH0 CW121212 FM20 CTwhite,, % " ", OSD, Segoe UI Light ; OSD setup
 WinSet, Transparent, 0, OSD
 WinSet, ExStyle, +0x20, OSD
 
@@ -17,15 +17,17 @@ DllCall("SystemParametersInfo", UInt, 0x005D, UInt, n, Str, 0, UInt, 0)
 
 
 OSD(msg) { ; On-Screen Display
-global
+Global
 SetTimer, OffSD, Delete
-Progress, 0,, %msg%, OSD
-WinSet, Transparent, % a:=230, OSD
+If (msg!=old)
+	Progress, 0,, %msg%, OSD
+old:=msg
+WinSet, Transparent, % a:=240, OSD
 SetTimer, OffSD, 1100
 Return
 OffSD:
-	WinSet, Transparent, % a:=(a>1)*a*.6, OSD
-	If a
+	WinSet, Transparent, % a:=(a>1)*a*.66, OSD
+	If (a)
 		SetTimer, OffSD, 17
 	Return
 }
@@ -47,9 +49,8 @@ If ((y2-y1)>DZ)
 
 
 noR() { ; prevent context menu
-global
+Global
 RL:=0
-;sleep 5 ; fixes R lockout bug on R+L+M
 trail(noTrail)
 If (noRclick) {
 	noRclick:=0
@@ -59,7 +60,7 @@ If (noRclick) {
 
 
 browser() { ; gestures in chromium, firefox, IE
-global
+Global
 MouseGetPos, x2, y2
 If !(WinActive("ahk_class Chrome_WidgetWin_1") or WinActive("ahk_class MozillaWindowClass") or WinActive("ahk_class IEFrame"))
 	Return -1
@@ -101,15 +102,15 @@ Else
 
 
 RandM(x1, y1) {
-global
-while GetKeyState("RButton", "P")
-	If GetKeyState("MButton", "P") and noRclick {
+Global
+While (GetKeyState("RButton", "P"))
+	If (GetKeyState("MButton", "P") and noRclick) {
 		Send {Ctrl down}{0}{Ctrl up}
 		OSD("Zoom Reset")
 		KeyWait, MButton, U
 		}	
 KeyWait, MButton, U
-If noR()
+If (noR())
 	Exit
 MouseGetPos, x2, y2
 Switch RLUD(x1, y1, x2, y2) {
@@ -133,15 +134,15 @@ Switch RLUD(x1, y1, x2, y2) {
 
 
 wheel(D) {
-global
-If GetKeyState("LButton", "P") {
-	If RL {
+Global
+If (GetKeyState("LButton", "P")) {
+	If (RL) {
 		noRclick:=1
 		If (D)
 			Send {Volume_Down} ; volume down
 		Else
 			Send {Volume_Up} ; volume up
-		if wOS<8
+		If (wOS<8)
 			OSD("Volume "+(D?Chr(0x2212):"+"))
 		}
 	Exit
@@ -157,18 +158,18 @@ Send {Ctrl up}
 }
 
 
-RandL(x1, y1, t1) { ; global rocker gestures
-global
-while GetKeyState("RButton", "P")
-	while GetKeyState("LButton", "P")
-		If GetKeyState("MButton", "P") {
+RandL(x1, y1, t1) { ; Global rocker gestures
+Global
+While (GetKeyState("RButton", "P"))
+	While (GetKeyState("LButton", "P"))
+		If (GetKeyState("MButton", "P")) {
 			noRclick:=1
 			Send {Volume_Mute} ; volume mute
-			if wOS<8
+			If (wOS<8)
 				OSD("Volume Mute")
 			KeyWait, MButton, U
 			}
-If noR()
+If (noR())
 	Exit
 MouseGetPos, x2, y2
 Switch RLUD(x1, y1, x2, y2) {
@@ -179,7 +180,7 @@ Switch RLUD(x1, y1, x2, y2) {
 		Send {Ctrl down}#{Left}{Ctrl up}
 		OSD("Desktop Left")
 	Case 3:
-		if wOS<10
+		If (wOS<10)
 			Send {Ctrl down}#{tab}{Ctrl up}
 		Else
 			Send #{tab}
@@ -198,16 +199,16 @@ Switch RLUD(x1, y1, x2, y2) {
 
 
 checkclick() {
-global
+Global
 MouseGetPos, x1, y1
-If !GetKeyState("LButton", "P") and !GetKeyState("MButton", "P") ; anti-reverse rocker
-	while GetKeyState("RButton", "P")
-		If GetKeyState("MButton", "P") {
+If !(GetKeyState("LButton", "P") or GetKeyState("MButton", "P")) ; anti-reverse rocker
+	While (GetKeyState("RButton", "P"))
+		If (GetKeyState("MButton", "P")) {
 			RandM(x1, y1)
 			Return 1
 			}
 		Else
-		If GetKeyState("LButton", "P") {
+		If (GetKeyState("LButton", "P")) {
 			RandL(x1, y1, t1)
 			Return 1
 			}
@@ -217,7 +218,7 @@ If !GetKeyState("LButton", "P") and !GetKeyState("MButton", "P") ; anti-reverse 
 RButton::
 t1:=A_TickCount
 trail(16) ; trail length (max 16)
-If checkclick() or noR() or !browser()
+If (checkclick() or noR() or !browser())
 	Exit
 If (abs(x2-x1)+abs(y2-y1)<22) { ; ignore mini-drag
 	Click Right
