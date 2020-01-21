@@ -22,3 +22,5 @@ Simple programming (<5kb) with cardinal directions only.
 Features a gnarly mouse-trail and On-Screen Display.
 
 See code comments for gesture details.
+
+![](/GG1.ico)
