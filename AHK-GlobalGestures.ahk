@@ -1,9 +1,10 @@
-; AHK-GlobalGestures v1.24 - https://github.com/CheeseFrog/AHK-GlobalGestures
+; AHK-GlobalGestures v1.25 - https://github.com/CheeseFrog/AHK-GlobalGestures
 
 
 #NoEnv
 #SingleInstance Force
-#MaxHotkeysPerInterval 200
+IfExist, %A_ScriptDir%\GG1.ico
+	Menu, Tray, Icon, %A_ScriptDir%\GG1.ico, 1
 CoordMode, Mouse, Screen
 DllCall("SystemParametersInfo", UInt, 0x005E, UInt, 0, UIntP, noTrail, UInt, 0) ; get default trail
 wOS:=DllCall("GetVersion")&0xFF ; Win Version
@@ -20,13 +21,13 @@ OSD(msg) { ; On-Screen Display
 Global
 SetTimer, OffSD, Delete
 If (msg!=old)
-	Progress, 0,, %msg%, OSD
+	Progress,,, %msg%, OSD
 old:=msg
 WinSet, Transparent, % a:=240, OSD
 SetTimer, OffSD, 1100
 Return
 OffSD:
-	WinSet, Transparent, % a:=(a>1)*a*.66, OSD
+	WinSet, Transparent, % a:=(a>2)*a*.7, OSD
 	If (a)
 		SetTimer, OffSD, 17
 	Return
@@ -220,14 +221,14 @@ t1:=A_TickCount
 trail(16) ; trail length (max 16)
 If (checkclick() or noR() or !browser())
 	Exit
-If (abs(x2-x1)+abs(y2-y1)<22) { ; ignore mini-drag
+If (abs(x2-x1)+abs(y2-y1)<22) ; ignore mini-drag
 	Click Right
-	Exit
+Else {
+	MouseMove, %x1%, %y1%, 0 ; preserve default right-click drag
+	Click, down, right
+	MouseMove, %x2%, %y2%, 2
+	Click, up, right
 	}
-MouseMove, %x1%, %y1%, 0 ; preserve default right-click drag
-Click, down, right
-MouseMove, %x2%, %y2%, 2
-Click, up, right
 Return
 
 
